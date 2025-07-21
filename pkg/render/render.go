@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/florian-lahitte-uvi/bookings-app/pkg/config"
-	"github.com/florian-lahitte-uvi/bookings-app/pkg/models"
+	"github.com/florian-lahitte-uvi/bookings/pkg/config"
+	"github.com/florian-lahitte-uvi/bookings/pkg/models"
 )
 
 var functions = template.FuncMap{}
