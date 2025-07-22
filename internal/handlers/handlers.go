@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/florian-lahitte-uvi/bookings/internal/config"
+	forms "github.com/florian-lahitte-uvi/bookings/internal/form"
 	"github.com/florian-lahitte-uvi/bookings/internal/models"
 	"github.com/florian-lahitte-uvi/bookings/internal/render"
 )
@@ -56,6 +57,13 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 
 // Reservation renders the make a reservation page and displays form
 func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "make-reservation.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+}
+
+// PostReservation handles the submission of the reservation form
+func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "make-reservation.page.tmpl", &models.TemplateData{})
 }
 
@@ -87,8 +95,8 @@ type jsonResponse struct {
 	Message string `json:"message"`
 }
 
-// AvailabilityJson handles request and send Json response
-func (m *Repository) AvailabilityJson(w http.ResponseWriter, r *http.Request) {
+// AvailabilityJSON handles request and send Json response
+func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	// start := r.Form.Get("start")
 	// end := r.Form.Get("end")
