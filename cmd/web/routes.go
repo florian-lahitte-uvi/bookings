@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/florian-lahitte-uvi/bookings/pkg/config"
-	"github.com/florian-lahitte-uvi/bookings/pkg/handlers"
+	"github.com/florian-lahitte-uvi/bookings/internal/config"
+	"github.com/florian-lahitte-uvi/bookings/internal/handlers"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )

@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/florian-lahitte-uvi/bookings/pkg/config"
-	"github.com/florian-lahitte-uvi/bookings/pkg/models"
-	"github.com/florian-lahitte-uvi/bookings/pkg/render"
+	"github.com/florian-lahitte-uvi/bookings/internal/config"
+	"github.com/florian-lahitte-uvi/bookings/internal/models"
+	"github.com/florian-lahitte-uvi/bookings/internal/render"
 )
 
 // Repo the repository used by the handlers
