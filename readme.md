@@ -9,3 +9,4 @@ The repository for Building Modern Web Applications with Go.
 - Uses [nosurf](github.com/justinas/nosurf)
 - Uses [gobuffalo](https://gobuffalo.io/documentation/database/pop/)
 - Uses [PostgreSQL17](https://postgresapp.com/)
+- Uses [PostgreSQL Driver and Toolkit](https://github.com/jackc/pgx)
