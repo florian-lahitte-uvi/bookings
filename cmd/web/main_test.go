@@ -3,8 +3,12 @@ package main
 import "testing"
 
 func TestRun(t *testing.T) {
-	err := run()
+	db, err := run()
 	if err != nil {
 		t.Error("failed run")
+	}
+
+	if db == nil {
+		t.Error("expected database connection")
 	}
 }

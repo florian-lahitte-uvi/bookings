@@ -7,9 +7,12 @@ import (
 
 	"github.com/florian-lahitte-uvi/bookings/helpers"
 	"github.com/florian-lahitte-uvi/bookings/internal/config"
+	"github.com/florian-lahitte-uvi/bookings/internal/driver"
 	forms "github.com/florian-lahitte-uvi/bookings/internal/form"
 	"github.com/florian-lahitte-uvi/bookings/internal/models"
 	"github.com/florian-lahitte-uvi/bookings/internal/render"
+	"github.com/florian-lahitte-uvi/bookings/internal/repository"
+	"github.com/florian-lahitte-uvi/bookings/internal/repository/dbrepo"
 )
 
 // Repo the repository used by the handlers
@@ -18,12 +21,14 @@ var Repo *Repository
 // Repository is the repository type
 type Repository struct {
 	App *config.AppConfig
+	DB  repository.DatabaseRepo
 }
 
 // NewRepo creates a new repository
-func NewRepo(a *config.AppConfig) *Repository {
+func NewRepo(a *config.AppConfig, db *driver.DB) *Repository {
 	return &Repository{
 		App: a,
+		DB:  dbrepo.NewPostgresRepo(db.SQL, a),
 	}
 }
 

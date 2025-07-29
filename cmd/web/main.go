@@ -11,6 +11,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/florian-lahitte-uvi/bookings/helpers"
 	"github.com/florian-lahitte-uvi/bookings/internal/config"
+	"github.com/florian-lahitte-uvi/bookings/internal/driver"
 	"github.com/florian-lahitte-uvi/bookings/internal/handlers"
 	"github.com/florian-lahitte-uvi/bookings/internal/models"
 	"github.com/florian-lahitte-uvi/bookings/internal/render"
@@ -25,10 +26,11 @@ var errorLog *log.Logger
 
 // main is the main function
 func main() {
-	err := run()
+	db, err := run()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.SQL.Close()
 
 	fmt.Println(fmt.Sprintf("Staring application on port %s", portNumber))
 
@@ -43,7 +45,7 @@ func main() {
 	}
 }
 
-func run() error {
+func run() (*driver.DB, error) {
 	// what am I going to put in the session
 	gob.Register(models.Reservation{})
 
@@ -65,19 +67,29 @@ func run() error {
 
 	app.Session = session
 
+	// Connect to database
+	log.Println("Connecting to database...")
+	dsn := "user=florian.lahitte password= dbname=bookings port=5432 host=localhost"
+	db, err := driver.ConnectSQL(dsn)
+	if err != nil {
+		log.Fatal("cannot connect to database")
+	}
+	log.Println("Connected to database!")
+
+	// Create template cache
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
-		return err
+		return nil, err
 	}
 
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	repo := handlers.NewRepo(&app)
+	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
 	render.NewTemplates(&app)
 	helpers.NewHelpers(&app)
 
-	return nil
+	return db, nil
 }
