@@ -50,7 +50,7 @@ func run() (*driver.DB, error) {
 	gob.Register(models.Reservation{})
 	gob.Register(models.User{})
 	gob.Register(models.Room{})
-	gob.Register(models.Restrictions{})
+	gob.Register(models.Restriction{})
 
 	// change this to true when in production
 	app.InProduction = false
@@ -72,7 +72,7 @@ func run() (*driver.DB, error) {
 
 	// Connect to database
 	log.Println("Connecting to database...")
-	dsn := "user=florian.lahitte password= dbname=bookings port=5432 host=localhost"
+	dsn := "user=florian.lahitte password=postgres dbname=bookings port=5432 host=localhost"
 	db, err := driver.ConnectSQL(dsn)
 	if err != nil {
 		log.Fatal("cannot connect to database")
