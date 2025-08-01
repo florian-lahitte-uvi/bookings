@@ -116,3 +116,20 @@ func (m *postgresDBRepo) SearchAvaibilityForAllRooms(start, end time.Time) ([]mo
 
 	return rooms, nil
 }
+
+// get RoomByID returns a room
+func (m *postgresDBRepo) GetRoomByID(id int) (models.Room, error) {
+	// Give a context with a timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var room models.Room
+
+	// Prepare the SQL statement to get a room by ID
+	stmt := `select id, room_name, created_at, updated_at from rooms where id = $1`
+	err := m.DB.QueryRowContext(ctx, stmt, id).Scan(&room.ID, &room.RoomName, &room.CreatedAt, &room.UpdatedAt)
+	if err != nil {
+		return models.Room{}, err
+	}
+	return room, nil
+}
