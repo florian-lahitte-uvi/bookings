@@ -101,11 +101,19 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
                         if (data.ok) {
-                            console.log("Room " + roomID + " is available!");
+                            attention.custom({
+                                icon: 'success',
+                                showConfirmButton: false,
+
+                                msg: '<p>Room is available</p><p><a class="btn btn-primary" href="/book-room?id=' + data.room_id + '&s=' + data.start_date + '&e=' + data.end_date + '">Book Now!</a></p>'
+                            });
                         } else {
                             // Room is not available
+                            attention.error({
+                                title: 'Room Not Available',
+                                msg: 'The room is not available for the selected dates. Please choose different dates.'
+                            });
                             console.log("Room " + roomID + " is not available!");
                         }
                     })
