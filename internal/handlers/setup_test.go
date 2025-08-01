@@ -12,7 +12,6 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/florian-lahitte-uvi/bookings/internal/config"
-	"github.com/florian-lahitte-uvi/bookings/internal/driver"
 	"github.com/florian-lahitte-uvi/bookings/internal/models"
 	"github.com/florian-lahitte-uvi/bookings/internal/render"
 	"github.com/go-chi/chi"
@@ -55,7 +54,7 @@ func getRoutes() http.Handler {
 	app.TemplateCache = tc
 	app.UseCache = true
 
-	repo := NewRepo(&app, &driver.DB{})
+	repo := NewTestRepo(&app)
 	NewHandlers(repo)
 
 	render.NewRenderer(&app)
