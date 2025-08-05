@@ -401,3 +401,37 @@ func (m *Repository) ShowLogin(w http.ResponseWriter, r *http.Request) {
 		Form: forms.New(nil),
 	})
 }
+
+// handles login user in
+func (m *Repository) PostShowLogin(w http.ResponseWriter, r *http.Request) {
+	// Renew the session token
+	_ = m.App.Session.RenewToken(r.Context())
+
+	err := r.ParseForm()
+	if err != nil {
+		m.App.ErrorLog.Println("Error parsing form:", err)
+	}
+
+	var email = r.Form.Get("email")
+	var password = r.Form.Get("password")
+
+	form := forms.New(r.PostForm)
+	form.Required("email", "password")
+	if !form.Valid() {
+		render.Template(w, r, "login.page.tmpl", &models.TemplateData{
+			Form: form,
+		})
+		return
+	}
+
+	id, _, err := m.DB.Authenticate(email, password)
+	if err != nil {
+		m.App.Session.Put(r.Context(), "error", "Invalid login credentials")
+		http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+		return
+	}
+	// If we get here, authentication was successful
+	m.App.Session.Put(r.Context(), "user_id", id)
+	m.App.Session.Put(r.Context(), "flash", "Login successfully")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
