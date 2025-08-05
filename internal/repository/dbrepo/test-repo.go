@@ -52,3 +52,25 @@ func (m *testDBRepo) GetRoomByID(id int) (models.Room, error) {
 
 	return room, nil
 }
+
+func (m *testDBRepo) GetUserByID(id int) (models.User, error) {
+	var u models.User
+	if id > 2 {
+		return u, errors.New("User not found")
+	}
+	return u, nil
+}
+
+func (m *testDBRepo) UpdateUser(u models.User) error {
+	if u.ID == 0 {
+		return errors.New("User not found")
+	}
+	return nil
+}
+
+func (m *testDBRepo) Authenticate(email, testPassword string) (int, string, error) {
+	if email == "test@example.com" && testPassword == "password" {
+		return 1, "hashedPassword", nil
+	}
+	return 0, "", errors.New("invalid credentials")
+}
