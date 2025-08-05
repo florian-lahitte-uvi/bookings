@@ -416,7 +416,9 @@ func (m *Repository) PostShowLogin(w http.ResponseWriter, r *http.Request) {
 	var password = r.Form.Get("password")
 
 	form := forms.New(r.PostForm)
+	form.IsEmail("email")
 	form.Required("email", "password")
+
 	if !form.Valid() {
 		render.Template(w, r, "login.page.tmpl", &models.TemplateData{
 			Form: form,
