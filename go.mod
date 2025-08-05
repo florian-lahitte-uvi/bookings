@@ -19,6 +19,9 @@ require (
 	github.com/jackc/pgtype v1.14.0 // indirect
 	github.com/jackc/pgx/v4 v4.18.3 // indirect
 	github.com/jackc/pgx/v5 v5.7.5 // indirect
+	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
+	github.com/xhit/go-simple-mail v2.2.2+incompatible // indirect
+	github.com/xhit/go-simple-mail/v2 v2.16.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
 )
