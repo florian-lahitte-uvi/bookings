@@ -437,3 +437,14 @@ func (m *Repository) PostShowLogin(w http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "flash", "Login successfully")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+
+// Logout handles the logout process
+func (m *Repository) Logout(w http.ResponseWriter, r *http.Request) {
+
+	_ = m.App.Session.Destroy(r.Context())
+
+	m.App.Session.RenewToken(r.Context())
+	m.App.Session.Put(r.Context(), "flash", "You have been logged out")
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
