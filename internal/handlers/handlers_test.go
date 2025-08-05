@@ -114,6 +114,15 @@ func TestRepository_Reservation(t *testing.T) {
 
 func TestRepository_PostReservation(t *testing.T) {
 
+	// Set up a reservation in session as the handler expects
+	reservation := models.Reservation{
+		RoomID: 1,
+		Room: models.Room{
+			ID:       1,
+			RoomName: "General's Quarters",
+		},
+	}
+
 	postedData := url.Values{}
 	postedData.Add("start_date", "2050-01-01")
 	postedData.Add("end_date", "2050-01-02")
@@ -126,6 +135,9 @@ func TestRepository_PostReservation(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/make-reservation", strings.NewReader(postedData.Encode()))
 	ctx := getCtx(req)
 	req = req.WithContext(ctx)
+
+	// Put reservation in session as expected by handler
+	session.Put(ctx, "reservation", reservation)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -241,6 +253,8 @@ func TestRepository_PostReservation(t *testing.T) {
 
 	ctx = getCtx(req)
 	req = req.WithContext(ctx)
+	// Put reservation in session for this test too
+	session.Put(ctx, "reservation", reservation)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	rr = httptest.NewRecorder()
 
@@ -248,8 +262,8 @@ func TestRepository_PostReservation(t *testing.T) {
 
 	handler.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusSeeOther {
-		t.Errorf("PostReservation handler returned wrong response code for invalid data: got %d, wanted %d", rr.Code, http.StatusSeeOther)
+	if rr.Code != http.StatusOK {
+		t.Errorf("PostReservation handler returned wrong response code for invalid data: got %d, wanted %d", rr.Code, http.StatusOK)
 	}
 
 	// test for failure to insert reservation into database
@@ -266,6 +280,8 @@ func TestRepository_PostReservation(t *testing.T) {
 
 	ctx = getCtx(req)
 	req = req.WithContext(ctx)
+	// Put reservation in session
+	session.Put(ctx, "reservation", reservation)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	rr = httptest.NewRecorder()
 
@@ -291,6 +307,8 @@ func TestRepository_PostReservation(t *testing.T) {
 
 	ctx = getCtx(req)
 	req = req.WithContext(ctx)
+	// Put reservation in session
+	session.Put(ctx, "reservation", reservation)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	rr = httptest.NewRecorder()
 

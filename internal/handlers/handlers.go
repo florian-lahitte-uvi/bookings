@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -154,6 +155,23 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = m.DB.InsertRoomRestriction(restriction)
+
+	htmlMessage := fmt.Sprintf(`<h1>Reservation Confirmation</h1>
+<p>Thank you for your reservation, %s %s.</p>
+<p>Your reservation is from %s to %s.</p>
+<p>We will contact you at %s.</p>`, reservation.FirstName, reservation.LastName, reservation.StartDate.Format("2006-01-02"), reservation.EndDate.Format("2006-01-02"), reservation.Email)
+
+	// // Send email notification to guest
+	msg := models.MailData{
+		From:     "me@here.com",
+		To:       reservation.Email,
+		Subject:  "Reservation Confirmation",
+		Content:  htmlMessage,
+		Template: "basic",
+	}
+
+	m.App.MailChan <- msg
+
 	if err != nil {
 		m.App.Session.Put(r.Context(), "can't insert room restriction", "error")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
@@ -376,4 +394,8 @@ func (m *Repository) BookRoom(w http.ResponseWriter, r *http.Request) {
 
 	// Redirect to make reservation page
 	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
+}
+
+func (m *Repository) Login(w http.ResponseWriter, r *http.Request) {
+	render.Template(w, r, "login.page.tmpl", &models.TemplateData{})
 }

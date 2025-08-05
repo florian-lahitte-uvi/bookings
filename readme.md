@@ -11,3 +11,5 @@ The repository for Building Modern Web Applications with Go.
 - Uses [PostgreSQL17](https://postgresapp.com/)
 - Uses [PostgreSQL Driver and Toolkit](https://github.com/jackc/pgx)
 - Uses [Email with SMTP ](https://github.com/xhit/go-simple-mail)
+- Uses [MailHog](https://github.com/mailhog/MailHog)
+- Uses [GetFoundationEmail](https://get.foundation/emails/getting-started.html)
