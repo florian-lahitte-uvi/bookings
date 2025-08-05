@@ -13,3 +13,4 @@ The repository for Building Modern Web Applications with Go.
 - Uses [Email with SMTP ](https://github.com/xhit/go-simple-mail)
 - Uses [MailHog](https://github.com/mailhog/MailHog)
 - Uses [GetFoundationEmail](https://get.foundation/emails/getting-started.html)
+- Uses [Admin Template](https://github.com/BootstrapDash/RoyalUI-Free-Bootstrap-Admin-Template)
