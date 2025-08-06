@@ -197,7 +197,7 @@ func (m *postgresDBRepo) AllReservations() ([]models.Reservation, error) {
 
 	var reservations []models.Reservation
 
-	query := `select r.id, r.room_id, r.email, r.first_name, r.last_name, r.phone, r.start_date, r.end_date, r.created_at, r.updated_at, rm.room_name, rm.id
+	query := `select r.id, r.room_id, r.email, r.first_name, r.last_name, r.phone, r.start_date, r.end_date, r.created_at, r.updated_at, r.processed, rm.room_name
 	from reservations r 
 	left join rooms rm on (r.room_id = rm.id) 
 	order by r.start_date asc`
@@ -210,11 +210,50 @@ func (m *postgresDBRepo) AllReservations() ([]models.Reservation, error) {
 
 	for rows.Next() {
 		var r models.Reservation
-		err := rows.Scan(&r.ID, &r.RoomID, &r.Email, &r.FirstName, &r.LastName, &r.Phone, &r.StartDate, &r.EndDate, &r.CreatedAt, &r.UpdatedAt, &r.Room.RoomName, &r.Room.ID)
+		err := rows.Scan(&r.ID, &r.RoomID, &r.Email, &r.FirstName, &r.LastName, &r.Phone, &r.StartDate, &r.EndDate, &r.CreatedAt, &r.UpdatedAt, &r.Processed, &r.Room.RoomName)
 		if err != nil {
 			return reservations, err
 		}
+		r.Room.ID = r.RoomID // Set the room ID manually
+		reservations = append(reservations, r)
+	}
 
+	if err = rows.Err(); err != nil {
+		return reservations, err
+	}
+
+	if err = rows.Err(); err != nil {
+		return reservations, err
+	}
+
+	return reservations, nil
+}
+
+func (m *postgresDBRepo) AllNewReservations() ([]models.Reservation, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var reservations []models.Reservation
+
+	query := `select r.id, r.room_id, r.email, r.first_name, r.last_name, r.phone, r.start_date, r.end_date, r.created_at, r.updated_at, r.processed, rm.room_name
+	from reservations r 
+	left join rooms rm on (r.room_id = rm.id)
+	where r.processed = 0
+	order by r.start_date asc`
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return reservations, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var r models.Reservation
+		err := rows.Scan(&r.ID, &r.RoomID, &r.Email, &r.FirstName, &r.LastName, &r.Phone, &r.StartDate, &r.EndDate, &r.CreatedAt, &r.UpdatedAt, &r.Processed, &r.Room.RoomName)
+		if err != nil {
+			return reservations, err
+		}
+		r.Room.ID = r.RoomID // Set the room ID manually
 		reservations = append(reservations, r)
 	}
 
