@@ -290,8 +290,8 @@ func (m *postgresDBRepo) UpdateReservation(r models.Reservation) error {
 	defer cancel()
 
 	// Prepare the SQL statement to update a Reservation
-	stmt := `update reservations set first_name = $1, last_name = $2, email = $3, phone = $4, updated_at = $5`
-	_, err := m.DB.ExecContext(ctx, stmt, r.FirstName, r.LastName, r.Email, r.Phone, time.Now())
+	stmt := `update reservations set first_name = $1, last_name = $2, email = $3, phone = $4, updated_at = $5 where id = $6`
+	_, err := m.DB.ExecContext(ctx, stmt, r.FirstName, r.LastName, r.Email, r.Phone, time.Now(), r.ID)
 	if err != nil {
 		return err
 	}
