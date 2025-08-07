@@ -28,7 +28,7 @@ func NewRenderer(a *config.AppConfig) {
 
 // Return time in "YYYY-MM-DD" format
 func HumanDate(t time.Time) string {
-	return t.Format("2025-01-02")
+	return t.Format("2006-01-02")
 }
 
 // AddDefaultData adds data for all templates

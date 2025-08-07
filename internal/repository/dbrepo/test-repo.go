@@ -88,3 +88,13 @@ func (m *testDBRepo) AllNewReservations() ([]models.Reservation, error) {
 
 	return reservations, nil
 }
+
+func (m *testDBRepo) GetReservationByID(id int) (models.Reservation, error) {
+
+	var res models.Reservation
+	if id > 2 {
+		return res, errors.New("Reservation not found")
+	}
+
+	return res, nil
+}
