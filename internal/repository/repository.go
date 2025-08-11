@@ -9,7 +9,7 @@ import (
 type DatabaseRepo interface {
 	AllUsers() bool
 	InsertReservation(res models.Reservation) (int, error)
-	InsertRoomRestriction(restriction models.RoomRestrictions) error
+	InsertRoomRestriction(restriction models.RoomRestriction) error
 	SearchAvaibilityByDatesByRoomID(RoomID int, start, end time.Time) (bool, error)
 	SearchAvaibilityForAllRooms(start, end time.Time) ([]models.Room, error)
 	GetRoomByID(id int) (models.Room, error)
@@ -25,4 +25,5 @@ type DatabaseRepo interface {
 	DeleteReservation(id int) error
 	UpdateProcessedForReservation(id, processed int) error
 	AllRooms() ([]models.Room, error)
+	GetRestrictionsForRoomByDate(roomID int, start, end time.Time) ([]models.RoomRestriction, error)
 }
