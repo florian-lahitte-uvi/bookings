@@ -31,14 +31,33 @@ func (m *testDBRepo) InsertRoomRestriction(restriction models.RoomRestriction) e
 // return true if there are no room restrictions for the given dates
 // return false if there are room restrictions for the given dates
 func (m *testDBRepo) SearchAvaibilityByDatesByRoomID(RoomID int, start, end time.Time) (bool, error) {
+	// For testing: 2040 dates are available, 2050 dates are not, 2060 dates cause error
+	if start.Year() == 2060 {
+		return false, errors.New("database error")
+	}
+	if start.Year() == 2040 {
+		return true, nil
+	}
 	return false, nil
 }
 
 // SearchAvaibilityForAllRooms returns a slice of available rooms for the given dates
 // It returns an empty slice if there are no available rooms
 func (m *testDBRepo) SearchAvaibilityForAllRooms(start, end time.Time) ([]models.Room, error) {
-
 	var rooms []models.Room
+
+	// For testing: 2060 dates cause error, 2040 dates return rooms, 2050 dates return no rooms
+	if start.Year() == 2060 {
+		return rooms, errors.New("database error")
+	}
+
+	if start.Year() == 2040 {
+		room := models.Room{
+			ID:       1,
+			RoomName: "General's Quarters",
+		}
+		rooms = append(rooms, room)
+	}
 
 	return rooms, nil
 }
@@ -69,7 +88,7 @@ func (m *testDBRepo) UpdateUser(u models.User) error {
 }
 
 func (m *testDBRepo) Authenticate(email, testPassword string) (int, string, error) {
-	if email == "test@example.com" && testPassword == "password" {
+	if email == "me@here.ca" && testPassword == "password" {
 		return 1, "hashedPassword", nil
 	}
 	return 0, "", errors.New("invalid credentials")
@@ -121,4 +140,14 @@ func (m *testDBRepo) GetRestrictionsForRoomByDate(roomID int, start, end time.Ti
 	var restrictions []models.RoomRestriction
 
 	return restrictions, nil
+}
+
+func (m *testDBRepo) InsertBlockForRoom(id int, startDate time.Time) error {
+
+	return nil
+}
+
+func (m *testDBRepo) DeleteBlockByID(id int) error {
+
+	return nil
 }

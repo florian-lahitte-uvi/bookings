@@ -17,7 +17,7 @@ import (
 var functions = template.FuncMap{
 	"humanDate":  HumanDate,
 	"formatDate": FormatDate,
-	"iterate":    iterate,
+	"iterate":    Iterate,
 	"add":        Add,
 }
 
@@ -29,7 +29,7 @@ func Add(a, b int) int {
 }
 
 // Iterate return a slice of int starting at 1 and ending at count
-func iterate(count int) []int {
+func Iterate(count int) []int {
 	var i int
 	var items []int
 	for i = 0; i < count; i++ {

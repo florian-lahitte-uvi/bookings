@@ -19,6 +19,8 @@
 
         <form method="post" action="/admin/reservations/{{$src}}/{{$res.ID}}" novalidate>
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
+            <input type="hidden" name="year" value="{{index .StringMap "year"}}" />
+            <input type="hidden" name="month" value="{{index .StringMap "month"}}" />
 
             <div class="form-group mt-3">
                 <label for="first_name">First Name:</label>
@@ -48,12 +50,10 @@
             {{else}}
               <a href="/admin/reservations-{{$src}}" class="btn btn-warning ">Cancel</a>
             {{end}}
-          
+            {{if eq $res.Processed 0}}
             <a href="#!" onClick="processRes({{$res.ID}})" class="btn btn-info ">Mark as Processed</a>
-
-            <div class="margin-left=auto">
-             <a href="#!" onClick="deleteRes({{$res.ID}})" class="btn btn-danger ">Delete</a>
-            </div>
+            {{end}}
+            <a href="#!" onClick="deleteRes({{$res.ID}})" class="btn btn-danger ">Delete</a>
         </form>
     </div>
 {{end}}
@@ -70,7 +70,7 @@
                 msg: 'This action cannot be undone.',
                 callback: function(result) {
                     if (result) {
-                        window.location.href = "/admin/process-reservation/{{$src}}/" + id;
+                        window.location.href = "/admin/process-reservation/{{$src}}/" + id + "/do?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
                     }
                 }
             });
@@ -85,7 +85,7 @@
                 msg: 'This action cannot be undone.',
                 callback: function(result) {
                     if (result) {
-                        window.location.href = "/admin/delete-reservation/{{$src}}/" + id;
+                        window.location.href = "/admin/delete-reservation/{{$src}}/"  + id + "/do?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
                     }
                 }
             });
